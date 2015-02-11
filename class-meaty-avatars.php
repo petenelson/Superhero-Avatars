@@ -1,6 +1,6 @@
 <?php
 
-if ( !defined( 'ABSPATH' ) ) exit( 'restricted access' );
+if ( ! defined( 'ABSPATH' ) ) exit( 'restricted access' );
 
 if ( ! class_exists( "Meaty_Avatars" ) ) {
 
@@ -52,20 +52,21 @@ if ( ! class_exists( "Meaty_Avatars" ) ) {
 
 				// get the assigned tag or make a new one
 				if ( $tag = get_user_meta( $user->ID, $meta_key, true ) ) {
-					$avatar = $this->create_avatar_html( $this->generate_url( $tag, $size), $size, $user->display_name );
+					$avatar = $this->create_avatar_html( $this->generate_url( $tag, $size ), $size, $user->display_name );
 				} else {
 
 					$s = $this->get_baconmockup_tags();
 
-					// get a random meat
-					$random = $s[array_rand( $s, 1 )];
+					if ( ! empty( $s ) ) {
+						// get a random meat
+						$random = $s[array_rand( $s, 1 )];
 
-					// assign it to the user
-					update_user_meta( $user->ID, $meta_key, $random );
+						// assign it to the user
+						update_user_meta( $user->ID, $meta_key, $random );
 
-					// generate img tag
-					$avatar = $this->create_avatar_html( $this->generate_url( $random, $size), $size, $random );
-
+						// generate img tag
+						$avatar = $this->create_avatar_html( $this->generate_url( $random, $size ), $size, $random );
+					}
 				}
 
 			}
@@ -114,12 +115,22 @@ if ( ! class_exists( "Meaty_Avatars" ) ) {
 			if ( empty( $return ) ) {
 
 				$return = wp_remote_get( 'http://baconmockup.com/images-api/image-tags/' );
+
+
+				if ( is_wp_error( $return ) ) {
+					return false;
+				}
+				else {
+					$return = json_decode( wp_remote_retrieve_body( $return ) );
+				}
+
 				if ( ! empty( $return ) && ! empty( $return->data ) ) {
-					set_site_transient( 'baconmockup-tags', $return->data, DAY_IN_SECONDS * 1 );
+					$return = $return->data;
+					set_site_transient( 'baconmockup-tags', $return, DAY_IN_SECONDS * 1 );
 				}
 
 			}
-			return $return->data;
+			return $return;
 		}
 
 	}
