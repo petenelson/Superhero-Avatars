@@ -5,9 +5,9 @@
  * Author: Pete Nelson
  * Author URI: https://twitter.com/GunGeekATX
  * Description: Replace avatars with images of meat
- * License: MIT
+ * License: WTFPL
  * Text Domain: meaty-avatars
- * Version: 1.0-RC1
+ * Version: 1.0
  */
 
 

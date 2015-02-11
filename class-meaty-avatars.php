@@ -110,39 +110,16 @@ if ( ! class_exists( "Meaty_Avatars" ) ) {
 		 * @return array
 		 */
 		public function get_baconmockup_tags() {
-			// TODO move this to a transient
-			$return = wp_cache_get( 'baconmockup-tags', 'baconmockup-tags' );
+			$return = get_site_transient( 'baconmockup-tags' );
 			if ( empty( $return ) ) {
 
-				// TODO for now, this is hardcoded until we expose an API on baconmockup
-				$return = array(
-					'bacon',
-					'bacon2',
-					'beef',
-					'brisket',
-					'corned-beef',
-					'drumstick',
-					'drumstick2',
-					'family-style-bbq',
-					'flank-steak',
-					'hamburger',
-					'pastrami',
-					'pork-ribs',
-					'pulled-pork',
-					'ribeye',
-					'ribeye2',
-					'ribeyes-and-bacon',
-					'ribs-of-beef',
-					'salami',
-					'sausage',
-					'sausage2',
-					'sirloin',
-					'wing-rib',
-				);
+				$return = wp_remote_get( 'http://baconmockup.com/images-api/image-tags/' );
+				if ( ! empty( $return ) && ! empty( $return->data ) ) {
+					set_site_transient( 'baconmockup-tags', $return->data, DAY_IN_SECONDS * 1 );
+				}
 
-				wp_cache_set( 'baconmockup-tags', $return, 'baconmockup-tags', DAY_IN_SECONDS * 1 );
 			}
-			return $return;
+			return $return->data;
 		}
 
 	}
