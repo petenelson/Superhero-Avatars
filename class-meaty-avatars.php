@@ -13,7 +13,17 @@ if ( ! class_exists( "Meaty_Avatars" ) ) {
 		 * @return void
 		 */
 		public function plugins_loaded() {
+
+			// Filter the user avatar
 			add_filter( 'get_avatar', array( $this, 'get_avatar' ), 10, 5 );
+
+			// Hooks for registering admin scripts
+			add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts') );
+
+			// Show a the avatar on the user profile with AJAX calls to get a new one
+			add_action( 'show_user_profile', array( $this, 'edit_user_profile' ) );
+			add_action( 'edit_user_profile', array( $this, 'edit_user_profile' ) );
+
 		}
 
 
@@ -87,7 +97,7 @@ if ( ! class_exists( "Meaty_Avatars" ) ) {
 		 * @param  int $size    Used for both the width and height parameters.
 		 * @return string
 		 */
-		function generate_url( $tag, $size ) {
+		public function generate_url( $tag, $size ) {
 
 			// Create the URL
 			$url = implode( '/', array(
@@ -150,6 +160,70 @@ if ( ! class_exists( "Meaty_Avatars" ) ) {
 
 			return $tags;
 		}
+
+
+		/**
+		 * Registers admin scripts
+		 *
+		 * @return void
+		 */
+		public function admin_scripts() {
+			wp_register_script( 'meaty-avatars-admin',
+				plugin_dir_url( __FILE__ ) . 'meaty-avatars-admin.js',
+				array( 'jquery' ),
+				'1.1',
+				true
+			);
+		}
+
+
+		/**
+		 * Shows the meaty avatar and tag for the supplied user
+		 *
+		 * @param  WP_User $user The user being displayed.
+		 * @return void
+		 */
+		public function edit_user_profile( $user ) {
+
+			// Nonce for saving the new tag.
+			wp_nonce_field( 'meaty-avatars', 'meaty-avatars-nonce' );
+
+			// Enqueue the admin scripts to handle AJAX calls
+			wp_enqueue_script( 'meaty-avatars-admin' );
+
+			// Get the currently assigned tag.
+			$tag = get_user_meta( $user->ID, 'meaty_avatar_tag', true );
+
+			?>
+
+				<h3><?php _e( 'Meaty Avatar','meaty-avatars' ); ?></h3>
+				<table class="form-table" id="meaty-avatars-form-table">
+					<tbody>
+						<tr>
+							<th>
+								<?php _e( 'Current Avatar' , 'meaty-avatars' ); ?>
+							</th>
+							<td>
+								<input type="hidden" name="meaty_avatar_tag" class="meat-avatar-tag" value="<?php echo esc_attr( $tag ); ?>" />
+								<span class="meaty-avatar-tag-label"><em><?php echo esc_html( $tag ); ?></em></span>
+								<div class="meaty-avatar-container">
+									<?php echo get_avatar( $user->ID, 128 ); ?>
+								</div>
+								<p>
+									<a href="#new-meaty-avatar" class="new-meaty-avatar"><?php esc_html_e( 'Get New Meaty Avatar', 'meaty-avatars' ) ?></a>
+									<span class="meaty-avatar-spinner spinner hidden" style="float: none;"></span>
+								</p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<script>
+				</script>
+
+			<?php 
+		}
+
 
 	}
 }
