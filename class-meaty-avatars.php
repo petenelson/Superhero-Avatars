@@ -24,6 +24,9 @@ if ( ! class_exists( "Meaty_Avatars" ) ) {
 			add_action( 'show_user_profile', array( $this, 'edit_user_profile' ) );
 			add_action( 'edit_user_profile', array( $this, 'edit_user_profile' ) );
 
+			// Save the new avatar tag
+			add_action( 'personal_options_update',  array( $this, 'edit_user_profile_update' ) );
+			add_action( 'edit_user_profile_update', array( $this, 'edit_user_profile_update' ) );
 		}
 
 
@@ -169,7 +172,7 @@ if ( ! class_exists( "Meaty_Avatars" ) ) {
 		 */
 		public function admin_scripts() {
 			wp_register_script( 'meaty-avatars-admin',
-				plugin_dir_url( __FILE__ ) . 'meaty-avatars-admin.js',
+				trailingslashit( plugin_dir_url( __FILE__ ) ) . 'assets/js/meaty-avatars-admin.js',
 				array( 'jquery' ),
 				'1.1',
 				true
@@ -195,7 +198,6 @@ if ( ! class_exists( "Meaty_Avatars" ) ) {
 			$tag = get_user_meta( $user->ID, 'meaty_avatar_tag', true );
 
 			?>
-
 				<h3><?php _e( 'Meaty Avatar','meaty-avatars' ); ?></h3>
 				<table class="form-table" id="meaty-avatars-form-table">
 					<tbody>
@@ -217,13 +219,34 @@ if ( ! class_exists( "Meaty_Avatars" ) ) {
 						</tr>
 					</tbody>
 				</table>
-
-				<script>
-				</script>
-
 			<?php 
 		}
 
+
+		/**
+		 * Saves the user's meaty avatar tag
+		 *
+		 * @param  int $user_id The user ID.
+		 * @return void
+		 */
+		public function edit_user_profile_update( $user_id ) {
+
+			if ( ! check_admin_referer( 'meaty-avatars', 'meaty-avatars-nonce' ) ) {
+				return;
+			}
+
+			if ( ! current_user_can('edit_user', $user_id ) ) {
+				wp_die( __( 'You do not have permission to edit this user.' ) );
+			}
+
+			$tag = filter_input( INPUT_POST, 'meaty_avatar_tag', FILTER_SANITIZE_STRING );
+
+			// Filter this down to a key value
+			$tag = sanitize_key( $tag );
+
+			// Store the tag
+			update_user_meta( $user_id, 'meaty_avatar_tag', $tag );
+		}
 
 	}
 }

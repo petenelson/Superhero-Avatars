@@ -28,6 +28,10 @@ Any questions that come up frequently will be here.
 
 == Changelog ==
 
+= 1.1 =
+* TODO
+
+
 = 1.0 =
 * Initial release
 

@@ -7,7 +7,7 @@
  * Description: Replace avatars with images of meat
  * License: WTFPL
  * Text Domain: meaty-avatars
- * Version: 1.0
+ * Version: 1.1
  */
 
 
