@@ -1,0 +1,20 @@
+{
+  "name": "meaty-avatars",
+  "version": "1.1.0",
+  "description": "Meaty WordPress Avatars",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/petenelson/meaty-avatars.git"
+  },
+  "author": "Pete Nelson",
+  "bugs": {
+    "url": "https://github.com/petenelson/meaty-avatars/issues"
+  },
+  "homepage": "https://github.com/petenelson/meaty-avatars#readme",
+  "devDependencies": {
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-potomo": "^3.4.0",
+    "grunt-wp-i18n": "^0.5.4",
+    "grunt-wp-readme-to-markdown": "^2.0.1"
+  }
+}
