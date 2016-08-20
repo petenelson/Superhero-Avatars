@@ -7,13 +7,15 @@
  * Description: Replace avatars with images of meat
  * License: WTFPL
  * Text Domain: meaty-avatars
- * Version: 1.0
+ * Version: 1.1
  */
 
 
 if ( !defined( 'ABSPATH' ) ) exit( 'restricted access' );
 
-require_once 'class-meaty-avatars.php';
+define( 'MEATY_AVATARS_PLUGIN_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
+
+require_once 'includes/class-meaty-avatars.php';
 
 if ( class_exists( 'Meaty_Avatars' ) ) {
 	$meaty_avatars = new Meaty_Avatars();
