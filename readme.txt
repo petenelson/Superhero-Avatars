@@ -28,13 +28,13 @@ Any questions that come up frequently will be here.
 
 == Changelog ==
 
-= 1.1 =
+= 1.1.0 Aug 21 2016 =
 * Added ability to the user profile to randomly select a new meaty avatar
 
-= 1.0 =
+= v1.0.0 Feb 11 2015 =
 * Initial release
 
 == Upgrade Notice ==
 
-= 1.1 =
+= 1.1.0 Aug 21 2016 =
 * Added ability to the user profile to randomly select a new meaty avatar

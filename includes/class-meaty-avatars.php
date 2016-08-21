@@ -174,7 +174,7 @@ if ( ! class_exists( "Meaty_Avatars" ) ) {
 			wp_register_script( 'meaty-avatars-admin',
 				MEATY_AVATARS_PLUGIN_URL . 'assets/js/meaty-avatars-admin.js',
 				array( 'jquery' ),
-				'1.1',
+				MEATY_AVATARS_VERSION,
 				true
 			);
 		}
